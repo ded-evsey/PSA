@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Создание архива
+{% endblock %}
+{% block body %}
+    <form class="p-3 my-3 bg-light" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="row mb-4">
+            <div class="col-6">
+                {{ form.filename|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.files|as_crispy_field }}
+            </div>
+            <div class="col-2">
+                {{ form.extension|as_crispy_field }}
+            </div>
+        </div>
+        <input type="submit"  {% if disable %}title="Подождите один день, ваш лимит на загрузку исчерпан" disabled {% endif  %} value="Отправить файлы">
+    </form>
+    <div class="p-3 my-3 bg-light">
+        {% if files %}
+            <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        Название
+                    </th>
+                    <th scope="col">
+                        Дата загрузки
+                    </th>
+                    <th scope="col">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>{{ file }}</td>
+                        <td>{{ file.uploaded_at }}</td>
+                        <td>
+                            <a href="{{ file.archive.url }}"> Скачать </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% else %}
+            Вами пока ничего не загруженно
+        {% endif %}
+
+    </div>
+{%  endblock %}
